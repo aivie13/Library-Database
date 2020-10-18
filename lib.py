@@ -58,6 +58,40 @@ def check_out(db):
     else:
         print('Sorry, it looks like we don\'t have that book on hand.')
 
+def return_book(db):
+    print('What book would you like to return')
+    book = input('> ')
+
+    result = db.collection('Books').document(book).get()
+    if result.exists:
+        book_data = {
+            'date': '', 'userID': '', 'status': 'available'
+        }
+        db.collection('Books').document(book).update(book_data)
+    else:
+        print('Sorry, it looks like that book doesn\'t exist in the library.')
+
+def remove_book(db):
+    print('Which book would you like to remove?')
+    book = input('> ')
+    result = db.collection('Books').document(book).get()
+    if result.exists:
+        db.collection('Books').document(book).delete
+    else:
+        print('Sorry, it looks like that book doesn\'t exist in the library.')
+
+def list_unavailable(db):
+    print('Enter the name you gave at checkout')
+    name = input('> ')
+    print()
+    query = db.collection("Books").where("userID","==",name)
+    results = query.get()
+    print("{:<20}  {:<10}".format("Name", "Date CHecked Out"))
+    for result in results:
+        arr = result.to_dict()
+        print("{:<20}  {:<10}".format(arr["title"], arr["date"]))
+    print()   
+    
 
 def menu(db):
     end = False
@@ -66,6 +100,8 @@ def menu(db):
         print('2) Check Out Book')
         print('3) Return Book')
         print('4) Add Book')
+        print('5) Remove Book')
+        print('6) List books I\'ve checked out')
         print('Q) Quit')
         command = input('> ')
         if command == '1':
@@ -75,10 +111,16 @@ def menu(db):
             check_out(db)
 
         elif command == '3':
-            return_book()
+            return_book(db)
 
         elif command == '4':
             add_book(db)
+
+        elif command == '5':
+            remove_book(db)
+
+        elif command == '6':
+            list_unavailable(db)
 
         elif command == 'Q':
             end = True
