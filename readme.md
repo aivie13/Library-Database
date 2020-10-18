@@ -4,7 +4,7 @@ This program simulates a library book management database.  It allows for simple
 # Execution
 `python3 -u path/to/file/lib.py`
 
-You will need to install firebase to run the program properly
+You will need to install firebase to run the program properly \
 `pip install firebase-admin`
 
 
